@@ -95,7 +95,7 @@ class NLayerDiscriminator(nn.Module):
             use_bias = norm_layer.func == nn.InstanceNorm2d
         else:
             use_bias = norm_layer == nn.InstanceNorm2d
-        self.dropout = dropout
+            
         kw = 4
         padw = 1
         sequence = [SpectralNorm(nn.Conv2d(input_nc, ndf, kernel_size=kw, stride=2, padding=padw)), nn.LeakyReLU(0.2, True)]
@@ -107,13 +107,11 @@ class NLayerDiscriminator(nn.Module):
             if not dropout:
                 sequence += [
                     SpectralNorm(nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=2, padding=padw, bias=use_bias)),
-                    norm_layer(ndf * nf_mult),
                     nn.LeakyReLU(0.2, True)
                 ]
             else: 
                 sequence += [
                     SpectralNorm(nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=2, padding=padw, bias=use_bias)),
-                    norm_layer(ndf * nf_mult),
                     nn.LeakyReLU(0.2, True),
                     nn.Dropout(0.3) 
                 ]
@@ -124,14 +122,12 @@ class NLayerDiscriminator(nn.Module):
         if not dropout:
             sequence += [
             SpectralNorm(nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=1, padding=padw, bias=use_bias)),
-            norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True)
         ]
 
         else:
             sequence += [
             SpectralNorm(nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=1, padding=padw, bias=use_bias)),
-            norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True),
             nn.Dropout(0.3) 
         ]
@@ -146,16 +142,14 @@ class NLayerDiscriminator(nn.Module):
 
 
 class MultiscaleDiscriminator(nn.Module):
-    def __init__(self, input_nc, ndf=64, n_layers=3, norm_layer=None,
-                 use_sigmoid=False, num_D=3, getIntermFeat=False):
+    def __init__(self, input_nc, ndf=64, n_layers=3,use_sigmoid=False, num_D=3, getIntermFeat=False):
         super(MultiscaleDiscriminator, self).__init__()
         self.num_D = num_D
         self.n_layers = n_layers
         self.getIntermFeat = getIntermFeat
 
         for i in range(num_D):
-            netD = NLayerMSDiscriminator(input_nc, ndf, n_layers,
-                                         norm_layer, use_sigmoid, getIntermFeat)
+            netD = NLayerMSDiscriminator(input_nc, ndf, n_layers, use_sigmoid, getIntermFeat)
             if getIntermFeat:
                 for j in range(n_layers + 2):
                     setattr(self, f'scale{i}_layer{j}', getattr(netD, f'model{j}'))
@@ -194,8 +188,7 @@ class MultiscaleDiscriminator(nn.Module):
 
     
 class NLayerMSDiscriminator(nn.Module):
-    def __init__(self, input_nc, ndf=64, n_layers=3, norm_layer=None,
-                 use_sigmoid=False, getIntermFeat=False):
+    def __init__(self, input_nc, ndf=64, n_layers=3, use_sigmoid=False, getIntermFeat=False):
         super(NLayerMSDiscriminator, self).__init__()
         self.getIntermFeat = getIntermFeat
         self.n_layers = n_layers
@@ -211,7 +204,6 @@ class NLayerMSDiscriminator(nn.Module):
             nf = min(nf * 2, 512)
             sequence += [[
                 SpectralNorm(nn.Conv2d(nf_prev, nf, kernel_size=kw, stride=2, padding=padw)),
-                norm_layer(nf),
                 nn.LeakyReLU(0.2, True)
             ]]
 
@@ -219,7 +211,6 @@ class NLayerMSDiscriminator(nn.Module):
         nf = min(nf * 2, 512)
         sequence += [[
             SpectralNorm(nn.Conv2d(nf_prev, nf, kernel_size=kw, stride=1, padding=padw)),
-            norm_layer(nf),
             nn.LeakyReLU(0.2, True)
         ]]
 
