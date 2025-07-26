@@ -11,7 +11,7 @@ class MTDataset(Dataset):
         self.image_dataroot = image_dataroot
 
         makeup_csv = os.path.join(self.csv_dataroot, f"makeup_{phase}.csv")
-        no_makeup_csv = os.path.join(self.csv_dataroot, f"non_makeup_{phase}.csv")
+        no_makeup_csv = os.path.join(self.csv_dataroot, f"no_makeup_{phase}.csv")
         self.makeup_files = pd.read_csv(makeup_csv)['filename'].tolist()
         self.no_makeup_files = pd.read_csv(no_makeup_csv)['filename'].tolist()
 
