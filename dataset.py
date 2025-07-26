@@ -15,8 +15,8 @@ class MTDataset(Dataset):
         self.makeup_files = pd.read_csv(makeup_csv)['filename'].tolist()
         self.no_makeup_files = pd.read_csv(no_makeup_csv)['filename'].tolist()
 
-        self.makeup_path = [os.path.join(self.image_dataroot, 'images/makeup', x) for x in self.makeup_files]
-        self.non_makeup_path = [os.path.join(self.image_dataroot, 'images/non_makeup', x) for x in self.no_makeup_files]
+        self.makeup_path = [os.path.join(self.image_dataroot, 'makeup', x) for x in self.makeup_files]
+        self.non_makeup_path = [os.path.join(self.image_dataroot, 'non-makeup', x) for x in self.no_makeup_files]
 
         self.makeup_size = len(self.makeup_path)
         self.non_makeup_size = len(self.non_makeup_path)

@@ -31,8 +31,8 @@ lambda_skin = 1
 lambda_face = 0.1
 cycle_loss_metric = 'l1'
 disc = 'patchgan'
-csv_dataroot=r'E:\codes\GAN-i-do-makeup\splits'
-image_dataroot=r"E:\datasets\MT\all"
+csv_dataroot=r'/content/GAN-i-do-makeup/splits'
+image_dataroot=r'/content/GAN-i-do-makeup/dataset/all/images'
 phase='train'
 
 # Save training config
