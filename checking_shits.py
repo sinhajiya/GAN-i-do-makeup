@@ -18,8 +18,8 @@ def visualize_mask_simple(mask_path):
 
     # Assign a random color to each unique label
     unique_labels = np.unique(mask)
-    # color_map = {label: np.random.randint(0, 255, size=3) for label in unique_labels}
-    color_map = {label: np.random.randint(0, 255, size=3) for label in [9]}
+    color_map = {label: np.random.randint(0, 255, size=3) for label in unique_labels}
+    # color_map = {label: np.random.randint(0, 255, size=3) for label in [9]}
 
     # Create a color image to visualize the mask
     color_mask = np.zeros((mask.shape[0], mask.shape[1], 3), dtype=np.uint8)

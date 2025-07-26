@@ -152,7 +152,7 @@ class MakeUpLoss(nn.Module):
 
     def generate_masks(self, seg_mask_tensor):
         B, H, W = seg_mask_tensor.shape
-        lips_mask = (seg_mask_tensor == 7) | (seg_mask_tensor == 9)
+        lips_mask = (seg_mask_tensor == 11) | (seg_mask_tensor == 12)
         face_mask = seg_mask_tensor == 1
         eyes_mask = (seg_mask_tensor == 4) | (seg_mask_tensor == 5)
         eye_shadow_mask = torch.zeros_like(seg_mask_tensor, dtype=torch.float32)
