@@ -57,7 +57,7 @@ class VGGLoss(nn.Module):
             self.vgg = VGG19_feature(vgg_normal_correct=True)
         else:
             self.vgg = VGG19_feature()
-        self.loss = nn.L2Loss()
+        self.loss = nn.MSELoss()
         self.weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
 
     def forward(self, gen_non_makeup, non_makeup, gen_makeup, makeup):
