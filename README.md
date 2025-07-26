@@ -1,4 +1,4 @@
-# GAN-we-transfer-makeup (sorry)
+# GAN i even do makeup?
 Style transfer GAN to transfer makeup style from one face to another. 
 
 Link to dataset https://drive.google.com/file/d/18UlvYDL6UGZ2rs0yaDsSzoUlw8KI5ABY/view
