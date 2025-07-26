@@ -5,6 +5,7 @@ import torch.nn.functional as F
 class ResidualBlock(nn.Module):
     def __init__(self, dim_in, dim_out):
         super().__init__()
+        
         self.main = nn.Sequential(
             nn.Conv2d(dim_in, dim_out, kernel_size=3, stride=1, padding=1, bias=False),
             nn.InstanceNorm2d(dim_out, affine=True),
@@ -43,7 +44,7 @@ class Generator(nn.Module):
             nn.Conv2d(conv_dim * 4, conv_dim * 4, kernel_size=4, stride=2, padding=1, bias=False),
             nn.InstanceNorm2d(conv_dim * 4, affine=True),
             nn.ReLU(inplace=True),
-            *[ResidualBlock(conv_dim * 4) for _ in range(num_blocks)]
+            *[ResidualBlock(conv_dim * 4, conv_dim * 4) for _ in range(num_blocks)]
         )
 
         self.decoder_makeup = nn.Sequential(
