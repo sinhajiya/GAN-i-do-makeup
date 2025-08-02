@@ -7,10 +7,10 @@ class ResidualBlock(nn.Module):
         super().__init__()
         
         self.main = nn.Sequential(
-            nn.Conv2d(dim_in, dim_out, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.Conv2d(dim_in, dim_out, kernel_size=3, stride=1, padding=1, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(dim_out, affine=True),
             nn.ReLU(inplace=True),
-            nn.Conv2d(dim_out, dim_out, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.Conv2d(dim_out, dim_out, kernel_size=3, stride=1, padding=1, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(dim_out, affine=True))
 
     def forward(self, x):
@@ -22,26 +22,26 @@ class Generator(nn.Module):
 
         # No makeup picture
         self.encoder_no_makeup = nn.Sequential(
-            nn.Conv2d(3, conv_dim, kernel_size=7, stride=1, padding=3, bias=False),
+            nn.Conv2d(3, conv_dim, kernel_size=7, stride=1, padding=3, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(conv_dim, affine=True),
             nn.ReLU(inplace=True),
-            nn.Conv2d(conv_dim, conv_dim * 2, kernel_size=4, stride=2, padding=1, bias=False),
+            nn.Conv2d(conv_dim, conv_dim * 2, kernel_size=4, stride=2, padding=1, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(conv_dim * 2, affine=True),
             nn.ReLU(inplace=True)
         )
 
         self.encoder_makeup = nn.Sequential(
-            nn.Conv2d(3, conv_dim, kernel_size=7, stride=1, padding=3, bias=False),
+            nn.Conv2d(3, conv_dim, kernel_size=7, stride=1, padding=3, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(conv_dim, affine=True),
             nn.ReLU(inplace=True),
-            nn.Conv2d(conv_dim, conv_dim * 2, kernel_size=4, stride=2, padding=1, bias=False),
+            nn.Conv2d(conv_dim, conv_dim * 2, kernel_size=4, stride=2, padding=1, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(conv_dim * 2, affine=True),
             nn.ReLU(inplace=True)
         )
 
         # In the middle, concat the 2 beanches and feed to several res block (5.1)
         self.fusion = nn.Sequential(
-            nn.Conv2d(conv_dim * 4, conv_dim * 4, kernel_size=4, stride=2, padding=1, bias=False),
+            nn.Conv2d(conv_dim * 4, conv_dim * 4, kernel_size=4, stride=2, padding=1, bias=False,padding_mode='reflect'),
             nn.InstanceNorm2d(conv_dim * 4, affine=True),
             nn.ReLU(inplace=True),
             *[ResidualBlock(conv_dim * 4, conv_dim * 4) for _ in range(num_blocks)]
@@ -54,7 +54,7 @@ class Generator(nn.Module):
             nn.ConvTranspose2d(conv_dim * 2, conv_dim, kernel_size=4, stride=2, padding=1, bias=False),
             nn.InstanceNorm2d(conv_dim, affine=True),
             nn.ReLU(inplace=True),
-            nn.Conv2d(conv_dim, 3, kernel_size=7, stride=1, padding=3, bias=False),
+            nn.Conv2d(conv_dim, 3, kernel_size=7, stride=1, padding=3, bias=False,padding_mode='reflect'),
             nn.Tanh()
         )
         self.decoder_no_makeup = nn.Sequential(
@@ -64,7 +64,7 @@ class Generator(nn.Module):
             nn.ConvTranspose2d(conv_dim * 2, conv_dim, kernel_size=4, stride=2, padding=1, bias=False),
             nn.InstanceNorm2d(conv_dim, affine=True),
             nn.ReLU(inplace=True),
-            nn.Conv2d(conv_dim, 3, kernel_size=7, stride=1, padding=3, bias=False),
+            nn.Conv2d(conv_dim, 3, kernel_size=7, stride=1, padding=3, bias=False,padding_mode='reflect'),
             nn.Tanh()
         )
     def forward(self, no_makeup, makeup):

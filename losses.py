@@ -52,13 +52,17 @@ class CycleConsistencyLoss(nn.Module):
 class VGGLoss(nn.Module):
     def __init__(self, vgg_normal_correct=True):
         super().__init__()
-        self.vgg_normal_correct = vgg_normal_correct
-        if vgg_normal_correct:
-            self.vgg = VGG19_feature(vgg_normal_correct=True)
-        else:
-            self.vgg = VGG19_feature()
+
+        weights_path = r'E:\codes\GAN-i-do-makeup\vgg19-dcbb9e9d.pth'  # Local path to weights
+        vgg = models.vgg19()
+        vgg.load_state_dict(torch.load(weights_path))
+        self.features = vgg.features[:36].eval()
+        for param in self.features.parameters():
+            param.requires_grad = False
+            
         self.loss = nn.MSELoss()
         self.weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
+        self.vgg = VGG19_feature(vgg_normal_correct=vgg_normal_correct)
 
     def forward(self, gen_non_makeup, non_makeup, gen_makeup, makeup):
    
@@ -87,8 +91,8 @@ class VGG19_feature(nn.Module):
             vgg_pretrained[12:21],# r41
             vgg_pretrained[21:30] # r51
         ])
-        self.mean = torch.Tensor([0.485, 0.456, 0.406]).view(1,3,1,1).cuda()
-        self.std = torch.Tensor([0.229, 0.224, 0.225]).view(1,3,1,1).cuda()
+        self.mean = torch.Tensor([0.485, 0.456, 0.406]).view(1,3,1,1)
+        self.std = torch.Tensor([0.229, 0.224, 0.225]).view(1,3,1,1)
         self.vgg_normal_correct = vgg_normal_correct
         for param in self.parameters():
             param.requires_grad = False
@@ -208,7 +212,7 @@ class MakeUpLoss(nn.Module):
                     hist_ref = self.calc_hist(region_ref)
                     
                     if name == 'face':
-                        total_loss += 0.1 * self.loss(hist_gen, hist_ref)  
+                        total_loss += 0.001 * self.loss(hist_gen, hist_ref)  
                     else:
                         total_loss += self.loss(hist_gen, hist_ref)
 
