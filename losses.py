@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torchvision.models as models
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 import torchvision.transforms as transforms
-
+import os
 class LSGAN(nn.Module):
     def __init__(self, target_real_label=1.0, target_fake_label=0.0):
         super().__init__()
@@ -52,10 +52,15 @@ class CycleConsistencyLoss(nn.Module):
 class VGGLoss(nn.Module):
     def __init__(self, vgg_normal_correct=True):
         super().__init__()
-
-        weights_path = r'E:\codes\GAN-i-do-makeup\vgg19-dcbb9e9d.pth'  # Local path to weights
-        vgg = models.vgg19()
-        vgg.load_state_dict(torch.load(weights_path))
+        weights_path = r'E:\codes\GAN-i-do-makeup\vgg19-dcbb9e9d.pth'
+        if os.path.exists(weights_path):
+            print(f"Loading VGG19 weights from local file: {weights_path}")
+            vgg = models.vgg19()
+            vgg.load_state_dict(torch.load(weights_path))
+        else:
+            print("Local VGG19 weights not found. Downloading pretrained weights from torchvision.")
+            vgg = models.vgg19(pretrained=True)
+            
         self.features = vgg.features[:36].eval()
         for param in self.features.parameters():
             param.requires_grad = False
