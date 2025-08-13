@@ -5,15 +5,16 @@ from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 
 class MTDataset(Dataset):
-    def __init__(self, csv_dataroot, image_dataroot, phase):
+    def __init__(self, csv_dataroot, image_dataroot, phase,max_len_dataset):
         super().__init__()
         self.csv_dataroot = csv_dataroot
         self.image_dataroot = image_dataroot
-
+        self.max_len_dataset = max_len_dataset
         makeup_csv = os.path.join(self.csv_dataroot, f"makeup_{phase}.csv")
         no_makeup_csv = os.path.join(self.csv_dataroot, f"no_makeup_{phase}.csv")
-        self.makeup_files = pd.read_csv(makeup_csv)['filename'].tolist()[:400]
-        self.no_makeup_files = pd.read_csv(no_makeup_csv)['filename'].tolist()[:400]
+        
+        self.makeup_files = pd.read_csv(makeup_csv)['filename'].tolist()[:self.max_len_dataset]
+        self.no_makeup_files = pd.read_csv(no_makeup_csv)['filename'].tolist()[:self.max_len_dataset]
         self.makeup_path = [os.path.join(self.image_dataroot, 'makeup', x) for x in self.makeup_files]
         self.non_makeup_path = [os.path.join(self.image_dataroot, 'non-makeup', x) for x in self.no_makeup_files]
 

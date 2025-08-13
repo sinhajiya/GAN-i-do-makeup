@@ -21,10 +21,11 @@ def init_weights_xavier(m):
             nn.init.zeros_(m.bias)
 
 def train():
-    exp_name = 'try2_dataset_top500'
+    exp_name = 'experiment1'
     save_dir = os.path.join('./checkpoints', exp_name)
     os.makedirs(save_dir, exist_ok=True)
-
+    max_len_dataset = 400
+    
     viz = Visdom()
     assert viz.check_connection(), "Start Visdom server: python -m visdom.server"
 
@@ -45,7 +46,7 @@ def train():
     image_dataroot = r"E:\datasets\MT\all\images"
     phase = 'train'
 
-    dataset = MTDataset(csv_dataroot, image_dataroot, phase)
+    dataset = MTDataset(csv_dataroot, image_dataroot, phase,max_len_dataset)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0)
 
     netG = Generator().to(device)
