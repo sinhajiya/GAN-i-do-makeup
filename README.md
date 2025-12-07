@@ -5,7 +5,7 @@
 
 # BeautyGAN – Makeup Style Transfer
 
-**PyTorch implementation of [BeautyGAN](https://doi.org/10.1145/3240508.3240618)**[1] – a GAN-based facial makeup style transfer model. BeautyGAN combines **global domain-level loss** with **local instance-level loss** in a **dual input/output GAN** framework to achieve realistic and identity-preserving makeup transfer.
+**PyTorch re-implementation of [BeautyGAN](https://doi.org/10.1145/3240508.3240618)**[1] – a GAN-based facial makeup style transfer model. BeautyGAN combines **global domain-level loss** with **local instance-level loss** in a **dual input/output GAN** framework to achieve realistic and identity-preserving makeup transfer.
 
 ![BeautyGAN Framework](image.png)
 *Figure: BeautyGAN \[1] framework*
